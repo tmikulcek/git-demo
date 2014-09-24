@@ -1,14 +1,14 @@
 #include <stdio.h>
 
 int board[8][8];
-int postavljeno;
-int preskoci[8][8];
+int set;
+int skip[8][8];
 
-void kraljice();
-void postavi_kraljicu(int red, int stupac);
-void ukloni_kraljicu();
-int kvadrat(int red, int stupac, int i, int j);
-void ispisi();
+void queens();
+void setQueen(int row, int column);
+void removeQueen();
+int square(int row, int column, int i, int j);
+void printResult();
 
 int main()
 {
@@ -18,90 +18,90 @@ int main()
 		for (j = 0; j < 8; j++)
 		{
 			board[i][j] = 0;
-			preskoci[i][j] = 0;
+			skip[i][j] = 0;
 		}
-	postavljeno = 0;
+	set = 0;
 	
-	kraljice();
-	ispisi();
+	queens();
+	printResult();
 	return 0;
 }
 
-void kraljice()
+void queens()
 {
-	int stupac, pronasao_mjesto;
+	int column, foundSpot;
 	
-	while(postavljeno < 8)
+	while(set < 8)
 	{
-		pronasao_mjesto = 0;
+		foundSpot = 0;
 		
-		for (stupac = 0; stupac < 8; stupac++)
+		for (column = 0; column < 8; column++)
 		{
-			if (board[postavljeno][stupac] == 0 && preskoci[postavljeno][stupac] == 0)
+			if (board[set][column] == 0 && skip[set][column] == 0)
 			{
-				postavi_kraljicu(postavljeno, stupac);
-				pronasao_mjesto = 1;
+				setQueen(set, column);
+				foundSpot = 1;
 				break;
 			}
 		}
 		
-		if (!pronasao_mjesto)
-			ukloni_kraljicu();
+		if (!foundSpot)
+			removeQueen();
 	}
 }
 
-void postavi_kraljicu(int red, int stupac)
+void setQueen(int row, int column)
 {
 	int i, j;
 	
 	for (i = 0; i < 8; i++)
 		for (j = 0; j < 8; j++)
 		{
-			if (i == red || j == stupac || kvadrat(red, stupac, i, j))
+			if (i == row || j == column || square(row, column, i, j))
 				board[i][j]++;
 		}
 		
-	board[red][stupac] = 10;
-	postavljeno++;
-	printf("postavio kraljicu broj %d na stupac %d\n", postavljeno, stupac + 1);
+	board[row][column] = 10;
+	set++;
+	printf("set queen number %d to column %d\n", set, column + 1);
 }
 
-void ukloni_kraljicu()
+void removeQueen()
 {
-	int red, stupac, stupac_kraljice;
-	postavljeno--;
+	int row, column, columnQueens;
+	set--;
 	
-	for (stupac = 0; stupac < 8; stupac++)
+	for (column = 0; column < 8; column++)
 	{
-		if (board[postavljeno][stupac] == 10)
+		if (board[set][column] == 10)
 		{
-			board[postavljeno][stupac] = 0;
-			preskoci[postavljeno][stupac] = 1;
-			stupac_kraljice = stupac;
+			board[set][column] = 0;
+			skip[set][column] = 1;
+			columnQueens = column;
 			break;
 		}
 	}
 	
-	for (red = 0; red < 8; red++)
-		for (stupac = 0; stupac < 8; stupac++)
-			if ((red == postavljeno || stupac == stupac_kraljice || kvadrat(postavljeno, stupac_kraljice, red, stupac)) && board[red][stupac] > 0)
-				board[red][stupac]--;
+	for (row = 0; row < 8; row++)
+		for (column = 0; column < 8; column++)
+			if ((row == set || column == columnQueens || square(set, columnQueens, row, column)) && board[row][column] > 0)
+				board[row][column]--;
 			
-	for (stupac = 0; stupac < 8; stupac++)
-		preskoci[postavljeno + 1][stupac] = 0;
+	for (column = 0; column < 8; column++)
+		skip[set + 1][column] = 0;
 	
-	printf("uklonio kraljicu broj %d\n", postavljeno + 1);
+	printf("removed queen number %d\n", set + 1);
 }
 
-void ispisi()
+void printResult()
 {
-	int red, stupac;
+	int row, column;
 	
-	for (red = 0; red < 8; red++)
+	for (row = 0; row < 8; row++)
 	{
-		for (stupac = 0; stupac < 8; stupac++)
+		for (column = 0; column < 8; column++)
 		{
-			if (board[red][stupac] != 10)
+			if (board[row][column] != 10)
 				printf("_ ");
 			else
 				printf("K ");
@@ -110,19 +110,19 @@ void ispisi()
 	}
 }
 
-int kvadrat(int red, int stupac, int i, int j)
+int square(int row, int column, int i, int j)
 {
-	int apsolutni_i, apsolutni_j;
+	int absoluteI, absoluteJ;
 	
-	apsolutni_i = red - i;
-	if (apsolutni_i < 0)
-		apsolutni_i = 0 - apsolutni_i;
+	absoluteI = row - i;
+	if (absoluteI < 0)
+		absoluteI = 0 - absoluteI;
 	
-	apsolutni_j = stupac - j;
-	if (apsolutni_j < 0)
-		apsolutni_j = 0 - apsolutni_j;
+	absoluteJ = column - j;
+	if (absoluteJ < 0)
+		absoluteJ = 0 - absoluteJ;
 		
-	if (apsolutni_i == apsolutni_j)
+	if (absoluteI == absoluteJ)
 		return 1;
 	else
 		return 0;
