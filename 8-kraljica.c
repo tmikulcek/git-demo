@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int ploca[8][8];
+int board[8][8];
 int postavljeno;
 int preskoci[8][8];
 
@@ -17,7 +17,7 @@ int main()
 	for (i = 0; i < 8; i++)
 		for (j = 0; j < 8; j++)
 		{
-			ploca[i][j] = 0;
+			board[i][j] = 0;
 			preskoci[i][j] = 0;
 		}
 	postavljeno = 0;
@@ -37,7 +37,7 @@ void kraljice()
 		
 		for (stupac = 0; stupac < 8; stupac++)
 		{
-			if (ploca[postavljeno][stupac] == 0 && preskoci[postavljeno][stupac] == 0)
+			if (board[postavljeno][stupac] == 0 && preskoci[postavljeno][stupac] == 0)
 			{
 				postavi_kraljicu(postavljeno, stupac);
 				pronasao_mjesto = 1;
@@ -58,10 +58,10 @@ void postavi_kraljicu(int red, int stupac)
 		for (j = 0; j < 8; j++)
 		{
 			if (i == red || j == stupac || kvadrat(red, stupac, i, j))
-				ploca[i][j]++;
+				board[i][j]++;
 		}
 		
-	ploca[red][stupac] = 10;
+	board[red][stupac] = 10;
 	postavljeno++;
 	printf("postavio kraljicu broj %d na stupac %d\n", postavljeno, stupac + 1);
 }
@@ -73,9 +73,9 @@ void ukloni_kraljicu()
 	
 	for (stupac = 0; stupac < 8; stupac++)
 	{
-		if (ploca[postavljeno][stupac] == 10)
+		if (board[postavljeno][stupac] == 10)
 		{
-			ploca[postavljeno][stupac] = 0;
+			board[postavljeno][stupac] = 0;
 			preskoci[postavljeno][stupac] = 1;
 			stupac_kraljice = stupac;
 			break;
@@ -84,8 +84,8 @@ void ukloni_kraljicu()
 	
 	for (red = 0; red < 8; red++)
 		for (stupac = 0; stupac < 8; stupac++)
-			if ((red == postavljeno || stupac == stupac_kraljice || kvadrat(postavljeno, stupac_kraljice, red, stupac)) && ploca[red][stupac] > 0)
-				ploca[red][stupac]--;
+			if ((red == postavljeno || stupac == stupac_kraljice || kvadrat(postavljeno, stupac_kraljice, red, stupac)) && board[red][stupac] > 0)
+				board[red][stupac]--;
 			
 	for (stupac = 0; stupac < 8; stupac++)
 		preskoci[postavljeno + 1][stupac] = 0;
@@ -101,7 +101,7 @@ void ispisi()
 	{
 		for (stupac = 0; stupac < 8; stupac++)
 		{
-			if (ploca[red][stupac] != 10)
+			if (board[red][stupac] != 10)
 				printf("_ ");
 			else
 				printf("K ");
